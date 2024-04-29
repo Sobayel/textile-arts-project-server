@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion ,ObjectId} = require('mongodb');
 require('dotenv').config();
 const app = express();
 const port = process.env.PORT || 5000;
@@ -32,8 +32,16 @@ async function run() {
     
 
     app.get('/addCraft', async(req, res) =>{
-        const cursor = addCraftCollection.find();
+        const cursor =await addCraftCollection.find();
         const result = await cursor.toArray();
+        res.send(result);
+    })
+
+
+    app.get('/addCraft/:id', async(req, res) =>{
+        const id = req.params.id;
+        const query = {_id: new ObjectId(id)}
+        const result = await addCraftCollection.findOne(query);
         res.send(result);
     })
 
@@ -42,6 +50,35 @@ async function run() {
         const newCraft = req.body;
         console.log(newCraft);
         const result = await addCraftCollection.insertOne(newCraft);
+        res.send(result);
+    })
+
+    app.put('/addCraft/:id', async(req, res) =>{
+        const id = req.params.id;
+        const filter = {_id: new ObjectId(id)}
+        const options = { upsert: true };
+        const updatedArts = req.body;
+        const arts = {
+            $set: {
+                name: updatedArts.name,
+                subcategory: updatedArts.subcategory,
+                description: updatedArts.description,
+                stock: updatedArts.stock,
+                customization: updatedArts.customization,
+                processing: updatedArts.processing,
+                price: updatedArts.price,
+                rating: updatedArts.rating,
+                image: updatedArts.image
+            }
+        }
+        const result = await addCraftCollection.updateOne(filter, arts, options);
+        res.send(result);
+    })
+
+    app.delete('/addCraft/:id', async(req, res) =>{
+        const id = req.params.id;
+        const query = {_id: new ObjectId(id)}
+        const result = await addCraftCollection.deleteOne(query);
         res.send(result);
     })
 
