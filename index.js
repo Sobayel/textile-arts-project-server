@@ -94,7 +94,7 @@ run().catch(console.dir);
 
 
 app.get('/', (req, res) => {
-  res.send('Textile Arts server Making is running')
+  res.send('Textile Arts server making is running')
 })
 
 app.listen(port, () => {
