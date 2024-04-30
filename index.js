@@ -24,7 +24,6 @@ const client = new MongoClient(uri, {
 
 async function run() {
   try {
-    // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
 
     const addCraftCollection = client.db("addCraftDB").collection('addCraft');
@@ -32,14 +31,12 @@ async function run() {
     const craftItemCollection = client.db("addCraftDB").collection('craftItem');
 
     
-
     app.get('/addCraft', async(req, res) =>{
         const query = req.query
         const cursor =await addCraftCollection.find(query);
         const result = await cursor.toArray();
         res.send(result);
     })
-
 
     app.get('/addCraft/:id', async(req, res) =>{
         const id = req.params.id;
@@ -113,5 +110,5 @@ app.get('/', (req, res) => {
 })
 
 app.listen(port, () => {
-  console.log(`Textile server is running on port ${port}`)
+  console.log(`Textile Arts server is running on port ${port}`)
 })
