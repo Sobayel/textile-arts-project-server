@@ -32,7 +32,8 @@ async function run() {
     
 
     app.get('/addCraft', async(req, res) =>{
-        const cursor =await addCraftCollection.find();
+        const query = req.query
+        const cursor =await addCraftCollection.find(query);
         const result = await cursor.toArray();
         res.send(result);
     })
@@ -48,7 +49,6 @@ async function run() {
 
     app.post('/addCraft', async(req, res) =>{
         const newCraft = req.body;
-        console.log(newCraft);
         const result = await addCraftCollection.insertOne(newCraft);
         res.send(result);
     })
@@ -58,7 +58,7 @@ async function run() {
         const filter = {_id: new ObjectId(id)}
         const options = { upsert: true };
         const updatedArts = req.body;
-        const arts = {
+        const addCraft = {
             $set: {
                 name: updatedArts.name,
                 subcategory: updatedArts.subcategory,
@@ -71,7 +71,7 @@ async function run() {
                 image: updatedArts.image
             }
         }
-        const result = await addCraftCollection.updateOne(filter, arts, options);
+        const result = await addCraftCollection.updateOne(filter, addCraft, options);
         res.send(result);
     })
 
