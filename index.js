@@ -29,6 +29,8 @@ async function run() {
 
     const addCraftCollection = client.db("addCraftDB").collection('addCraft');
 
+    const craftItemCollection = client.db("addCraftDB").collection('craftItem');
+
     
 
     app.get('/addCraft', async(req, res) =>{
@@ -79,6 +81,19 @@ async function run() {
         const id = req.params.id;
         const query = {_id: new ObjectId(id)}
         const result = await addCraftCollection.deleteOne(query);
+        res.send(result);
+    })
+
+
+    app.get('/craftItem', async(req, res) =>{
+        const cursor =await craftItemCollection.find();
+        const result = await cursor.toArray();
+        res.send(result);
+    })
+
+    app.post('/craftItem', async(req, res) =>{
+        const newCraft = req.body;
+        const result = await craftItemCollection.insertOne(newCraft);
         res.send(result);
     })
 
